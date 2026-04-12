@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | <%= siteName %></title>
+    <style>
+        body { margin: 0; background: #050505; color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; height: 100vh; justify-content: center; align-items: center; overflow: hidden; }
+        .error-code { font-size: 120px; font-weight: bold; margin: 0; background: linear-gradient(45deg, #007bff, #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(0, 123, 255, 0.5)); animation: pulse 2s infinite; }
+        .error-message { font-size: 20px; color: rgba(255, 255, 255, 0.7); margin-bottom: 30px; letter-spacing: 1px; }
+        .btn-back { padding: 12px 25px; border: 1px solid #007bff; background: transparent; color: #007bff; border-radius: 5px; cursor: pointer; text-decoration: none; transition: 0.3s; }
+        .btn-back:hover { background: #007bff; color: white; box-shadow: 0 0 20px rgba(0, 123, 255, 0.4); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        footer { position: absolute; bottom: 20px; font-size: 13px; color: rgba(255, 255, 255, 0.4); }
+        footer a { color: inherit; text-decoration: none; }
+        footer a:hover { color: #007bff; text-decoration: underline; text-underline-offset: 4px; }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1 class="error-code">404</h1>
+        <p class="error-message">Parece que te has perdido en la oscuridad...</p>
+        <a href="/" class="btn-back">VOLVER AL INICIO</a>
+    </div>
+    <footer>
+        Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank"><%= siteName %></a>. All rights reserved.
+    </footer>
+</body>
+</html>
