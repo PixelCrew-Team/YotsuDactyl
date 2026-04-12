@@ -19,10 +19,7 @@ app.use((req, res, next) => {
     res.locals.siteName = config.siteName;
     res.locals.siteUrl = config.siteUrl;
     res.locals.displayTitle = config.displayTitle;
-    res.locals.user = { 
-        username: 'Félix', 
-        role: 'admin' 
-    };
+    res.locals.user = null;
     next();
 });
 
@@ -39,7 +36,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/dash', (req, res) => {
-    const servers = []; 
+    const servers = [];
     res.render('dashboard', { servers });
 });
 
@@ -53,5 +50,5 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`${config.siteName} iniciado en puerto ${PORT}`);
+    console.log(`${config.siteName} listo en puerto ${PORT}`);
 });
