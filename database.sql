@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS servers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    identifier VARCHAR(20) UNIQUE NOT NULL,
+    status VARCHAR(20) DEFAULT 'active',
+    cpu_limit INTEGER DEFAULT 100,
+    ram_limit INTEGER DEFAULT 1024,
+    disk_limit INTEGER DEFAULT 5120,
+    suspended BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS server_subusers (
+    id SERIAL PRIMARY KEY,
+    server_id INTEGER REFERENCES servers(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    permissions JSONB DEFAULT '{}'
+);
