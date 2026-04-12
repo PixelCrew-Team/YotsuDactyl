@@ -18,8 +18,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     res.locals.siteName = config.siteName;
     res.locals.siteUrl = config.siteUrl;
+    res.locals.displayTitle = config.displayTitle;
+    res.locals.user = { role: 'admin' }; 
     next();
 });
+
+const isAdmin = (req, res, next) => {
+    if (res.locals.user && res.locals.user.role === 'admin') {
+        next();
+    } else {
+        res.status(403).render('403');
+    }
+};
 
 app.get('/', (req, res) => {
     res.render('login');
@@ -27,6 +37,10 @@ app.get('/', (req, res) => {
 
 app.get('/dash', (req, res) => {
     res.render('dashboard');
+});
+
+app.get('/admin', isAdmin, (req, res) => {
+    res.render('admin/index');
 });
 
 app.use((req, res) => {
