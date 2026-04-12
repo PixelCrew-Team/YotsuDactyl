@@ -1,0 +1,30 @@
+{
+  "name": "yotsudactyl",
+  "version": "1.0.0",
+  "description": "Repositorio oficial de Yotsudactyl - Panel de gestión de servidores",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "pterodactyl",
+    "dashboard",
+    "docker",
+    "node.js"
+  ],
+  "author": "Félix - PixelCrew-Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "dockerode": "^4.0.2",
+    "socket.io": "^4.7.5",
+    "pg": "^8.11.5",
+    "dotenv": "^16.4.5",
+    "bcrypt": "^5.1.1",
+    "ejs": "^3.1.10"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
