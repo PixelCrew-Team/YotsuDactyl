@@ -2,6 +2,8 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
+const db = require('./database');
 require('dotenv').config();
 
 const app = express();
@@ -19,7 +21,7 @@ app.use((req, res, next) => {
     res.locals.siteName = config.siteName;
     res.locals.siteUrl = config.siteUrl;
     res.locals.displayTitle = config.displayTitle;
-    res.locals.user = null;
+    res.locals.user = null; 
     next();
 });
 
@@ -35,9 +37,33 @@ app.get('/', (req, res) => {
     res.render('login');
 });
 
-app.get('/dash', (req, res) => {
-    const servers = [];
-    res.render('dashboard', { servers });
+app.post('/auth/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+        if (result.rows.length > 0) {
+            const user = result.rows[0];
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                res.redirect('/dash');
+            } else {
+                res.redirect('/?error=1');
+            }
+        } else {
+            res.redirect('/?error=1');
+        }
+    } catch (err) {
+        res.status(500).send('Error en el servidor');
+    }
+});
+
+app.get('/dash', async (req, res) => {
+    try {
+        const servers = []; 
+        res.render('dashboard', { servers });
+    } catch (err) {
+        res.status(500).send('Error al cargar el dashboard');
+    }
 });
 
 app.get('/admin', isAdmin, (req, res) => {
@@ -50,5 +76,5 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`${config.siteName} listo en puerto ${PORT}`);
+    console.log(`${config.siteName} operando en puerto ${PORT}`);
 });
