@@ -19,7 +19,10 @@ app.use((req, res, next) => {
     res.locals.siteName = config.siteName;
     res.locals.siteUrl = config.siteUrl;
     res.locals.displayTitle = config.displayTitle;
-    res.locals.user = { role: 'admin' }; 
+    res.locals.user = { 
+        username: 'Félix', 
+        role: 'admin' 
+    };
     next();
 });
 
@@ -36,7 +39,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/dash', (req, res) => {
-    res.render('dashboard');
+    const servers = []; 
+    res.render('dashboard', { servers });
 });
 
 app.get('/admin', isAdmin, (req, res) => {
