@@ -49,5 +49,5 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`${config.siteName} running on port ${PORT}`);
+    console.log(`${config.siteName} iniciado en puerto ${PORT}`);
 });
