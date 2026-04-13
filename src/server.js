@@ -79,51 +79,9 @@ app.get('/server/:id', auth, async (req, res) => {
     res.render('server/index', { server: result.rows[0] });
 });
 
-app.get('/server/:id/files', auth, async (req, res) => {
-    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
-    const serverData = result.rows[0];
-    try {
-        const files = await fm.getFiles(serverData.identifier);
-        res.render('server/files', { server: serverData, files });
-    } catch (err) {
-        res.render('server/files', { server: serverData, files: [] });
-    }
-});
-
-app.get('/server/:id/startup', auth, async (req, res) => {
-    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
-    res.render('server/startup', { server: result.rows[0] });
-});
-
-app.get('/server/:id/backups', auth, async (req, res) => {
-    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
-    res.render('server/backups', { server: result.rows[0] });
-});
-
-app.get('/server/:id/settings', auth, async (req, res) => {
-    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
-    res.render('server/settings', { server: result.rows[0] });
-});
-
-app.get('/profile', auth, (req, res) => res.render('profile'));
-app.get('/notifications', auth, (req, res) => res.render('notifications'));
-
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
-});
-
-app.post('/api/server/:id/power', auth, async (req, res) => {
-    const { action } = req.body;
-    const result = await db.query('SELECT identifier FROM servers WHERE id = $1', [req.params.id]);
-    const serverData = result.rows[0];
-    try {
-        if (action === 'start') await daemon.startServer(serverData.identifier);
-        if (action === 'stop') await daemon.stopServer(serverData.identifier);
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
 });
 
 const PORT = process.env.PORT || 3000;
