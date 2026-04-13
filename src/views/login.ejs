@@ -16,6 +16,7 @@
             min-height: 100vh;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         .login-card {
             background: rgba(15, 15, 15, 0.8);
@@ -27,6 +28,7 @@
             width: 100%;
             max-width: 350px;
             text-align: center;
+            z-index: 2;
         }
         .login-card h1 {
             margin-bottom: 30px;
@@ -75,6 +77,29 @@
             background: #0056b3;
             box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
         }
+        .error-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 40, 40, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .error-toast.show {
+            transform: translateX(0);
+        }
         footer {
             position: absolute;
             bottom: 20px;
@@ -95,12 +120,26 @@
 </head>
 <body>
 
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div id="toast" class="error-toast">
+            <span>⚠️</span> <%= error %>
+        </div>
+        <script>
+            const toast = document.getElementById('toast');
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        </script>
+    <% } %>
+
     <div class="login-card">
         <h1><%= siteName %></h1>
         <form action="/auth/login" method="POST">
             <div class="input-group">
-                <label>Usuario</label>
-                <input type="text" name="username" required>
+                <label>Usuario o Email</label>
+                <input type="text" name="username" required autoFocus>
             </div>
             <div class="input-group">
                 <label>Contraseña</label>
