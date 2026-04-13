@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eggs | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; }
+        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255,255,255,0.05); position: fixed; height: 100vh; }
+        .main { margin-left: 260px; padding: 40px; width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+        .egg-item { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 15px 25px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .btn-delete { color: #ff5f5f; text-decoration: none; font-size: 13px; font-weight: bold; }
+        .btn-import { background: var(--blue); color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; width: fit-content; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="padding: 25px; text-align: center;"><h3><%= displayTitle %></h3></div>
+        <a href="/admin" style="padding: 12px 25px; display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;"><i class="fas fa-home"></i> Inicio</a>
+        <a href="/admin/eggs" style="padding: 12px 25px; display: block; color: var(--blue); text-decoration: none; font-size: 14px;"><i class="fas fa-egg"></i> Eggs</a>
+    </div>
+    <div class="main">
+        <h1>Eggs Disponibles</h1>
+        <div class="egg-item">
+            <span><i class="fab fa-node-js" style="color: #68a063; margin-right: 10px;"></i> Node.js (Varios)</span>
+            <a href="#" class="btn-delete">BORRAR</a>
+        </div>
+        <div class="egg-item">
+            <span><i class="fas fa-cube" style="color: #62b037; margin-right: 10px;"></i> Minecraft Server</span>
+            <a href="#" class="btn-delete">BORRAR</a>
+        </div>
+        <a href="#" class="btn-import">IMPORTAR EGG (JSON)</a>
+        <footer style="margin-top: auto; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2); padding-top: 40px;">
+            Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank" style="color: var(--blue); text-decoration: none;"><%= siteName %></a>
+        </footer>
+    </div>
+</body>
+</html>
