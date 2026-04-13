@@ -1,0 +1,75 @@
+:root {
+    --bg-galaxy: #020617;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --neon-blue: #38bdf8;
+    --text-main: #f8fafc;
+}
+
+body {
+    background: radial-gradient(circle at top, #0f172a, var(--bg-galaxy));
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.sidebar {
+    position: fixed;
+    left: -250px;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid var(--neon-blue);
+    transition: 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.sidebar.active {
+    left: 0;
+    box-shadow: 5px 0 15px rgba(56, 189, 248, 0.3);
+}
+
+.nav-link {
+    display: block;
+    padding: 15px 25px;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.nav-link:hover {
+    background: rgba(56, 189, 248, 0.1);
+    border-left: 4px solid var(--neon-blue);
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.btn-neon {
+    background: transparent;
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-shadow: 0 0 5px var(--neon-blue);
+    box-shadow: 0 0 5px var(--neon-blue);
+}
+
+.btn-neon:hover {
+    background: var(--neon-blue);
+    color: var(--bg-galaxy);
+}
