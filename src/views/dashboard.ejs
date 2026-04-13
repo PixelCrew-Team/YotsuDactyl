@@ -1,108 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | <%= displayTitle %></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { margin: 0; background: #050505; color: white; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-        nav { background: rgba(10, 10, 10, 0.9); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 123, 255, 0.2); }
-        .menu-left { display: flex; gap: 20px; align-items: center; }
-        .menu-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; transition: 0.3s; }
-        .menu-link:hover { color: #007bff; }
-        .admin-link { color: #ff0055 !important; font-weight: bold; }
+<%- include('partials/header') %>
 
-        .welcome-banner { 
-            background: linear-gradient(90deg, rgba(0, 123, 255, 0.2), rgba(0, 255, 204, 0.1));
-            border: 1px solid #007bff;
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
-            margin: 20px 30px; padding: 20px; border-radius: 10px; text-align: center;
-        }
-
-        .view-filters { margin: 0 30px 20px; display: flex; gap: 10px; }
-        .filter-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        .filter-btn.active { border-color: #007bff; color: #007bff; }
-
-        .servers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 0 30px; }
-        .server-card { background: rgba(15, 15, 15, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 20px; position: relative; transition: 0.3s; }
-        .server-card:hover { border-color: #007bff; transform: translateY(-5px); }
-        .status-badge { position: absolute; top: 15px; right: 15px; font-size: 10px; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
-        .online { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid #00ff64; }
-        
-        .resource-info { margin-top: 15px; font-size: 13px; color: rgba(255, 255, 255, 0.6); }
-        .progress-bar { background: rgba(255, 255, 255, 0.05); height: 6px; border-radius: 10px; margin: 8px 0; overflow: hidden; }
-        .progress-fill { background: #007bff; height: 100%; width: 0%; transition: 0.5s; }
-
-        .btn-enter { width: 100%; margin-top: 15px; padding: 10px; background: #007bff; border: none; border-radius: 5px; color: white; cursor: pointer; font-weight: bold; }
-        
-        .empty-state { text-align: center; margin-top: 50px; color: rgba(255, 255, 255, 0.4); }
-
-        footer { margin-top: auto; padding: 20px; text-align: center; font-size: 13px; color: rgba(255, 255, 255, 0.4); }
-        footer a { color: inherit; text-decoration: none; border-bottom: 1px transparent; transition: 0.3s; }
-        footer a:hover { color: #007bff; border-bottom: 1px solid #007bff; }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <div class="menu-left">
-            <a href="/dash" class="menu-link"><i class="fas fa-home"></i> Inicio</a>
-            <a href="/profile" class="menu-link"><i class="fas fa-user"></i> Profile</a>
-            <a href="/inbox" class="menu-link"><i class="fas fa-envelope"></i> Bandeja</a>
-            <% if (user.role === 'admin') { %>
-                <a href="/admin" class="menu-link admin-link"><i class="fas fa-user-shield"></i> Área Admin</a>
-            <% } %>
-        </div>
-        <a href="/logout" class="menu-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </nav>
-
-    <div class="welcome-banner">
-        <h3>¡Bienvenido a <%= displayTitle %>, <%= user.username %>!</h3>
-    </div>
-
-    <% if (user.role === 'admin') { %>
-    <div class="view-filters">
-        <button class="filter-btn active">Mis Servidores</button>
-        <button class="filter-btn">Todos los Servidores</button>
-    </div>
-    <% } %>
-
-    <div class="servers-grid">
-        <% if (servers.length === 0) { %>
-            <div class="empty-state">
-                <i class="fas fa-server fa-3x"></i>
-                <p>¡Aún no tienes ningún servidor en tu cuenta!</p>
-            </div>
-        <% } else { %>
+<div class="container">
+    <h1 style="margin-bottom: 30px;">Tus Servidores</h1>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        <% if (servers.length > 0) { %>
             <% servers.forEach(server => { %>
-                <div class="server-card">
-                    <span class="status-badge online"><%= server.status %></span>
-                    <h2 style="font-size: 18px; margin: 0;"><%= server.name %></h2>
-                    
-                    <div class="resource-info">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span>CPU</span>
-                            <span><%= server.cpu_usage %>% / <%= server.cpu_limit %> Vcores</span>
-                        </div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: <%= (server.cpu_usage/server.cpu_limit)*100 %>%;"></div></div>
-
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                            <span>RAM</span>
-                            <span><%= server.ram_usage %>GB / <%= server.ram_limit %>GB</span>
-                        </div>
-                        <div class="progress-bar"><div class="progress-fill" style="width: <%= (server.ram_usage/server.ram_limit)*100 %>%;"></div></div>
-                    </div>
-
-                    <button class="btn-enter" onclick="window.location.href='/server/<%= server.id %>'">ENTRAR</button>
+                <div class="card">
+                    <h3 style="color: #38bdf8;"><%= server.name %></h3>
+                    <p style="opacity: 0.7;">Status: <span style="color: #22c55e;">Online</span></p>
+                    <a href="/server/<%= server.id %>" class="btn-neon" style="text-decoration: none; display: inline-block; margin-top: 10px;">Gestionar</a>
                 </div>
             <% }); %>
+        <% } else { %>
+            <div class="card">
+                <p>No tienes servidores activos todavía.</p>
+                <button class="btn-neon">+ Crear Nuevo</button>
+            </div>
         <% } %>
     </div>
+</div>
 
-    <footer>
-        Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank"><%= siteName %></a>. All rights reserved.
-    </footer>
-
-</body>
-</html>
+<%- include('partials/footer') %>
