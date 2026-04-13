@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Servidores | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; --accent: #00ffcc; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; }
+        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255,255,255,0.05); position: fixed; height: 100vh; }
+        .nav-item { padding: 12px 25px; display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; }
+        .main { margin-left: 260px; padding: 40px; width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .empty-state { text-align: center; margin-top: 100px; color: rgba(255,255,255,0.3); }
+        .btn-create { background: var(--blue); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; width: fit-content; margin-top: auto; cursor: pointer; border: none; }
+        
+        /* Modal Style */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 12px; border: 1px solid var(--blue); width: 500px; max-height: 90vh; overflow-y: auto; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; }
+        label { font-size: 12px; color: var(--blue); text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="padding: 25px; text-align: center;"><h3><%= displayTitle %></h3></div>
+        <a href="/admin" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+        <a href="/admin/servers" class="nav-item" style="color: var(--blue);"><i class="fas fa-server"></i> Servidores</a>
+        <a href="/admin/users" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
+    </div>
+
+    <div class="main">
+        <h1>Gestión de Servidores</h1>
+        <div class="empty-state">
+            <% if (servers.length === 0) { %>
+                <i class="fas fa-folder-open fa-3x"></i>
+                <p>No hay servidores todavía en el host.</p>
+            <% } %>
+        </div>
+
+        <button class="btn-create" onclick="document.getElementById('m').style.display='flex'">CREAR SERVIDOR</button>
+
+        <div id="m" class="modal">
+            <div class="modal-content">
+                <h2 style="margin-top: 0;">Nuevo Servidor</h2>
+                <form action="/admin/servers/create" method="POST">
+                    <label>Nombre del Servidor</label>
+                    <input type="text" name="name" placeholder="Mi Server Pro" required>
+                    
+                    <label>Correo del Propietario</label>
+                    <input type="email" name="owner" placeholder="usuario@correo.com" required>
+                    
+                    <label>Nodo</label>
+                    <select name="node"><option value="">No hay nodos disponibles</option></select>
+                    
+                    <label>RAM (MB)</label>
+                    <input type="number" name="ram" value="1024">
+                    
+                    <label>Disco (MB)</label>
+                    <input type="number" name="disk" value="5120">
+                    
+                    <label>CPU (%)</label>
+                    <input type="number" name="cpu" value="100">
+                    
+                    <label>Egg (Tipo)</label>
+                    <select name="egg">
+                        <option value="nodejs">Node.js (Bots)</option>
+                        <option value="minecraft">Minecraft Server</option>
+                    </select>
+
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn-create" style="margin: 0; flex: 1;">CREAR</button>
+                        <button type="button" onclick="document.getElementById('m').style.display='none'" style="background: #333; color: white; border: none; padding: 10px; border-radius: 5px; flex: 1; cursor: pointer;">CANCELAR</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <footer style="margin-top: 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2);">
+            Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank" style="color: var(--blue); text-decoration: none;"><%= siteName %></a>
+        </footer>
+    </div>
+</body>
+</html>
