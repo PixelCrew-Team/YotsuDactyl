@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; --accent: #00ffcc; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; min-height: 100vh; }
+        
+        /* Menú Lateral */
+        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255,255,255,0.05); position: fixed; height: 100vh; }
+        .sidebar-header { padding: 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .category { padding: 20px 25px 10px; font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+        .nav-item { padding: 12px 25px; display: block; color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; font-size: 14px; }
+        .nav-item:hover { background: rgba(0,123,255,0.1); color: var(--blue); }
+        .nav-item i { margin-right: 10px; width: 20px; text-align: center; }
+
+        /* Contenido */
+        .main { margin-left: 260px; padding: 40px; width: 100%; box-sizing: border-box; }
+        .welcome { font-size: 24px; font-weight: 300; margin-bottom: 30px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .bash-rect { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; text-align: center; transition: 0.3s; }
+        .bash-rect:hover { border-color: var(--blue); box-shadow: 0 0 15px rgba(0, 123, 255, 0.1); }
+        
+        .btn-bash { display: inline-block; margin-top: 15px; padding: 10px 25px; border-radius: 5px; text-decoration: none; color: white; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .btn-blue { background: var(--blue); }
+        .btn-kofi { background: #ff5f5f; }
+        .btn-paypal { background: #003087; }
+
+        .divider { grid-column: span 2; text-align: center; margin: 40px 0 20px; }
+        .divider h4 { margin: 0; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+        .divider p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 5px; }
+
+        .faq-section { margin-top: 40px; background: rgba(255,255,255,0.02); padding: 20px; border-radius: 10px; font-size: 14px; color: rgba(255,255,255,0.6); }
+
+        footer { margin-top: 50px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+        footer a { color: var(--blue); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header"><h3><%= displayTitle %></h3></div>
+        
+        <div class="category">General</div>
+        <a href="/admin" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+        <a href="/admin/avisos" class="nav-item"><i class="fas fa-bullhorn"></i> Avisos</a>
+        <a href="/admin/settings" class="nav-item"><i class="fas fa-cog"></i> Configuración</a>
+
+        <div class="category">Gestión</div>
+        <a href="/admin/servers" class="nav-item"><i class="fas fa-server"></i> Servidores</a>
+        <a href="/admin/users" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
+        <a href="/admin/nodes" class="nav-item"><i class="fas fa-network-wired"></i> Ubicaciones / Nodos</a>
+
+        <div class="category">Local</div>
+        <a href="/admin/eggs" class="nav-item"><i class="fas fa-egg"></i> Eggs</a>
+    </div>
+
+    <div class="main">
+        <h1 class="welcome">¡Bienvenido a la cabina principal maestro <%= user.username %>!</h1>
+
+        <div class="grid">
+            <div class="bash-rect">
+                <p>Apoya el repo de GitHub dejando una estrella</p>
+                <a href="https://github.com/PixelCrew-Team/YotsuDactyl" target="_blank" class="btn-bash btn-blue">APOYAR</a>
+            </div>
+            <div class="bash-rect">
+                <p>Visita nuestro sitio web oficial</p>
+                <a href="<%= siteUrl %>" target="_blank" class="btn-bash btn-blue">VISITAR</a>
+            </div>
+
+            <div class="divider">
+                <h4>Dona lo que sea al proyecto para seguir mejorando</h4>
+                <p>Somos una empresa sin ánimo de lucro, nuestro trabajo sigue en pie gracias a personas como tú!</p>
+            </div>
+
+            <div class="bash-rect">
+                <p>Donar por Kofi</p>
+                <a href="https://ko-fi.com/kurayamiteam" target="_blank" class="btn-bash btn-kofi">KO-FI</a>
+            </div>
+            <div class="bash-rect">
+                <p>Donar por Paypal</p>
+                <a href="https://www.paypal.me/JhosepMartinez2009" target="_blank" class="btn-bash btn-paypal">PAYPAL</a>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <strong>Guía rápida:</strong> Para crear un servidor, ve a Gestión > Servidores. Recuerda asignar primero un Nodo y un Propietario válido. No modifiques los Eggs manualmente en el VPS para evitar conflictos.
+        </div>
+
+        <footer>
+            Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank"><%= siteName %></a>. All rights reserved.
+        </footer>
+    </div>
+
+</body>
+</html>
