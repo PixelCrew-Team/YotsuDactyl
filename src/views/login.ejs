@@ -3,37 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | <%= siteName %></title>
+    <title>YotsuDactyl - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --bg-galaxy: #020617;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --neon-blue: #38bdf8;
+            --text-main: #f8fafc;
+        }
         body {
+            background: radial-gradient(circle at top, #0f172a, var(--bg-galaxy));
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            justify-content: center;
             align-items: center;
-            overflow: hidden;
+            justify-content: center;
         }
         .login-card {
-            background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
+            background: var(--card-bg);
+            border: 1px solid rgba(56, 189, 248, 0.2);
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 150, 255, 0.1);
+            padding: 40px;
             width: 100%;
-            max-width: 350px;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
             text-align: center;
-            z-index: 2;
-        }
-        .login-card h1 {
-            margin-bottom: 30px;
-            font-weight: 300;
-            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
         .input-group {
             margin-bottom: 20px;
@@ -41,117 +39,70 @@
         }
         .input-group label {
             display: block;
-            font-size: 12px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .input-group input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border-radius: 5px;
-            color: #fff;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-        }
-        .input-group input:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
-        }
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background: #007bff;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-        .btn-login:hover {
-            background: #0056b3;
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
-        }
-        .error-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 40, 40, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid #ff4444;
-            color: #ff4444;
-            padding: 15px 25px;
-            border-radius: 8px;
+            margin-bottom: 8px;
+            color: var(--neon-blue);
             font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateX(120%);
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        .error-toast.show {
-            transform: translateX(0);
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            box-sizing: border-box;
         }
-        footer {
-            position: absolute;
-            bottom: 20px;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
+        .input-field:focus {
+            border-color: var(--neon-blue);
         }
-        footer a {
-            color: inherit;
-            text-decoration: none;
+        .btn-neon {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--neon-blue);
             transition: 0.3s;
         }
-        footer a:hover {
-            color: #007bff;
-            text-decoration: underline;
-            text-underline-offset: 4px;
+        .btn-neon:hover {
+            background: var(--neon-blue);
+            color: var(--bg-galaxy);
+        }
+        .error-msg {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ef4444;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-
-    <% if (typeof error !== 'undefined' && error) { %>
-        <div id="toast" class="error-toast">
-            <span>⚠️</span> <%= error %>
-        </div>
-        <script>
-            const toast = document.getElementById('toast');
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 500);
-            }, 4000);
-        </script>
-    <% } %>
-
     <div class="login-card">
-        <h1><%= siteName %></h1>
+        <h1 style="color: var(--neon-blue); margin-bottom: 10px;">YOTSUDACTYL</h1>
+        <p style="opacity: 0.6; margin-bottom: 30px;">Inicia sesión para continuar</p>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-msg"><%= error %></div>
+        <% } %>
+
         <form action="/auth/login" method="POST">
             <div class="input-group">
-                <label>Usuario o Email</label>
-                <input type="text" name="username" required autoFocus>
+                <label>Usuario / Email</label>
+                <input type="text" name="username" class="input-field" required>
             </div>
             <div class="input-group">
                 <label>Contraseña</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" class="input-field" required>
             </div>
-            <button type="submit" class="btn-login">INGRESAR</button>
+            <button type="submit" class="btn-neon">ENTRAR AL PANEL</button>
         </form>
     </div>
-
-    <footer>
-        Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank"><%= siteName %></a>. All rights reserved.
-    </footer>
-
 </body>
 </html>
