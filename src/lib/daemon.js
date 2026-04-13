@@ -1,16 +1,19 @@
 const Docker = require('dockerode');
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
-const createServerContainer = async (serverData, eggData) => {
+const createServerContainer = async (server) => {
     const container = await docker.createContainer({
-        Image: eggData.docker_image,
-        name: `yotsu-${serverData.identifier}`,
-        Cmd: serverData.startup_command.split(' '),
+        Image: 'node:20-slim',
+        name: `yotsu-${server.identifier}`,
+        WorkingDir: '/home/container',
+        Cmd: server.startup_command.split(' '),
         HostConfig: {
-            Memory: serverData.ram * 1024 * 1024,
-            CpuQuota: serverData.cpu * 1000,
-            Binds: [`/var/lib/yotsudactyl/volumes/${serverData.identifier}:/home/container`]
-        }
+            Memory: server.ram * 1024 * 1024,
+            CpuQuota: server.cpu * 1000,
+            Binds: [`/var/lib/yotsudactyl/volumes/${server.identifier}:/home/container`],
+            RestartPolicy: { Name: 'on-failure', MaximumRetryCount: 5 }
+        },
+        ExposedPorts: { '3000/tcp': {} }
     });
     return container;
 };
@@ -25,4 +28,10 @@ const stopServer = async (identifier) => {
     await container.stop();
 };
 
-module.exports = { createServerContainer, startServer, stopServer };
+const getStats = async (identifier) => {
+    const container = docker.getContainer(`yotsu-${identifier}`);
+    const stats = await container.stats({ stream: false });
+    return stats;
+};
+
+module.exports = { createServerContainer, startServer, stopServer, getStats };
