@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; }
+        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255,255,255,0.05); position: fixed; height: 100vh; }
+        .nav-item { padding: 12px 25px; display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; }
+        .main { margin-left: 260px; padding: 40px; width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+        .user-card { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .btn-edit { background: #333; color: white; padding: 5px 15px; border-radius: 4px; text-decoration: none; font-size: 12px; border: 1px solid #444; }
+        .btn-create { background: var(--blue); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; width: fit-content; margin-top: auto; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="padding: 25px; text-align: center;"><h3><%= displayTitle %></h3></div>
+        <a href="/admin" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+        <a href="/admin/servers" class="nav-item"><i class="fas fa-server"></i> Servidores</a>
+        <a href="/admin/users" class="nav-item" style="color: var(--blue);"><i class="fas fa-users"></i> Usuarios</a>
+    </div>
+    <div class="main">
+        <h1>Gestión de Usuarios</h1>
+        <div class="user-list">
+            <div class="user-card">
+                <div>
+                    <strong><%= user.username %> (Tú)</strong><br>
+                    <small style="color: rgba(255,255,255,0.4);"><%= user.email || 'admin@yotsu.com' %></small>
+                </div>
+                <a href="#" class="btn-edit">EDITAR</a>
+            </div>
+        </div>
+        <a href="#" class="btn-create">CREAR USUARIO</a>
+        <footer style="margin-top: 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.2);">
+            Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank" style="color: var(--blue); text-decoration: none;"><%= siteName %></a>
+        </footer>
+    </div>
+</body>
+</html>
