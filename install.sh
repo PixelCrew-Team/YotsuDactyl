@@ -39,7 +39,6 @@ sudo mkdir -p /var/lib/yotsudactyl/volumes
 sudo chmod -R 777 /var/lib/yotsudactyl
 
 echo -e "${AZUL_B}┃${RESET} Configurando Base de Datos..."
-sudo -u postgres psql -c "DROP DATABASE IF EXISTS yotsudactyl;"
 sudo -u postgres psql -c "CREATE DATABASE yotsudactyl;"
 sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'yotsu_pass';"
 sudo -u postgres psql -d yotsudactyl -f database.sql
