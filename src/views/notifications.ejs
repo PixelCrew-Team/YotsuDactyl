@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notificaciones | <%= displayTitle %></title>
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; }
+        .container { padding: 40px; max-width: 800px; margin: auto; }
+        .notif { background: var(--card); padding: 20px; border-radius: 8px; border-left: 4px solid var(--blue); margin-bottom: 15px; }
+        .time { font-size: 12px; color: gray; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bandeja de Entrada</h1>
+        <div class="notif">
+            <div class="time">Hace 5 minutos</div>
+            <div>Bienvenido a <strong>YotsuDactyl</strong>. Tu cuenta ha sido activada correctamente.</div>
+        </div>
+        <div class="notif" style="border-left-color: #ffca28;">
+            <div class="time">Ayer</div>
+            <div>Aviso: El nodo principal entrará en mantenimiento programado.</div>
+        </div>
+    </div>
+</body>
+</html>
