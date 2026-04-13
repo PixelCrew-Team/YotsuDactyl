@@ -1,4 +1,22 @@
-# YotsuDactyl
-Panel inspirado en pterodactyl pero diseñado a puro código (no es el código oficial de prodactyl, este es creado desde cero)
+# 🐉 Yotsudactyl - Server Management Dashboard
 
-Fecha en que comenzó el proyecto: 12 de abril de 2026 (esto es por si sale alguien, se roba el código y continua el proyecto con otra fecha o algo, se que hay muchos que hacen eso y roban trabajos)
+**Yotsudactyl** es un panel de gestión de servidores potente, ligero y diseñado para ser eficiente. Creado con la visión de simplificar la administración de contenedores Docker y servicios web bajo una interfaz intuitiva y robusta.
+
+---
+
+## 🚀 Características Principales
+
+- 🛠 **Gestión de Servidores:** Control total sobre contenedores Docker.
+- 🥚 **Sistema de Eggs:** Configuración flexible para diferentes tipos de juegos y aplicaciones (Node.js preinstalado).
+- 🔐 **Seguridad Integrada:** Sistema de autenticación de administradores y gestión de sesiones.
+- 📊 **Panel de Control:** Interfaz diseñada para monitoreo y administración rápida.
+- 🔄 **Persistencia:** Base de datos PostgreSQL para un manejo de datos seguro y escalable.
+
+---
+
+## 📦 Instalación Rápida
+
+Para desplegar Yotsudactyl en un nuevo VPS, solo necesitas ejecutar el siguiente comando (asegúrate de tener permisos de root):
+
+```bash
+chmod +x install.sh && ./install.sh
