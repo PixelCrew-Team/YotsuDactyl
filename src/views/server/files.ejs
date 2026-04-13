@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Archivos | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; }
+        .header-server { padding: 20px 40px; background: var(--card); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-tabs { display: flex; gap: 5px; }
+        .nav-tab { padding: 10px 20px; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 5px; font-size: 14px; }
+        .nav-tab.active { border-bottom: 2px solid var(--blue); color: white; }
+        .container { padding: 40px; }
+        .file-manager { background: var(--card); border-radius: 8px; border: 1px solid #222; }
+        .file-header { padding: 15px 25px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 13px; color: gray; }
+        .file-row { padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; transition: 0.2s; cursor: pointer; }
+        .file-row:hover { background: rgba(255,255,255,0.02); }
+        .file-info { display: flex; align-items: center; gap: 15px; }
+        .btn-upload { background: var(--blue); color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header-server">
+        <h1><%= serverName %></h1>
+        <div class="nav-tabs">
+            <a href="/server/<%= serverId %>" class="nav-tab">Console</a>
+            <a href="#" class="nav-tab active">Files</a>
+            <a href="/server/<%= serverId %>/startup" class="nav-tab">Startup</a>
+            <a href="#" class="nav-tab">Backups</a>
+            <a href="#" class="nav-tab">Settings</a>
+        </div>
+    </div>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <div style="color: gray; font-size: 14px;">/home/container</div>
+            <a href="#" class="btn-upload">UPLOAD</a>
+        </div>
+        <div class="file-manager">
+            <div class="file-header"><span>Name</span><span>Size</span></div>
+            <div class="file-row">
+                <div class="file-info"><i class="fas fa-folder" style="color: var(--blue);"></i> node_modules</div>
+                <span>--</span>
+            </div>
+            <div class="file-row">
+                <div class="file-info"><i class="fab fa-node-js" style="color: #68a063;"></i> index.js</div>
+                <span>2.4 KB</span>
+            </div>
+            <div class="file-row">
+                <div class="file-info"><i class="fas fa-file-code" style="color: #ffca28;"></i> package.json</div>
+                <span>452 B</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
