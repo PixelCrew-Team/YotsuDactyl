@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const socketIo = require('socket.io');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
 const db = require('./database');
 const daemon = require('./lib/daemon');
 const fm = require('./lib/fm');
@@ -14,7 +15,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
+const configPath = path.join(__dirname, 'config.json');
+const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 require('./lib/terminal')(io);
 
@@ -41,21 +43,28 @@ app.use(async (req, res, next) => {
 
 app.get('/', (req, res) => {
     if (req.session.userId) return res.redirect('/dash');
-    res.render('login');
+    const error = req.session.errorMessage;
+    delete req.session.errorMessage;
+    res.render('login', { error });
 });
 
 app.post('/auth/login', async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-        const result = await db.query('SELECT * FROM users WHERE email = $1 AND password = $2', [email, password]);
+        const result = await db.query('SELECT * FROM users WHERE username = $1 OR email = $1', [username]);
         if (result.rows.length > 0) {
-            req.session.userId = result.rows[0].id;
-            res.redirect('/dash');
-        } else {
-            res.redirect('/?error=invalid');
+            const user = result.rows[0];
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                req.session.userId = user.id;
+                return res.redirect('/dash');
+            }
         }
+        req.session.errorMessage = "Credenciales incorrectas";
+        res.redirect('/');
     } catch (err) {
-        res.redirect('/?error=db');
+        req.session.errorMessage = "Error de conexión";
+        res.redirect('/');
     }
 });
 
@@ -101,7 +110,7 @@ app.get('/notifications', auth, (req, res) => res.render('notifications'));
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.render('logout');
+    res.redirect('/');
 });
 
 app.post('/api/server/:id/power', auth, async (req, res) => {
@@ -119,6 +128,5 @@ app.post('/api/server/:id/power', auth, async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`\x1b[32m%s\x1b[0m`, `[YotsuDactyl] SISTEMA COMPLETO Y SEGURO`);
-    console.log(`\x1b[33m%s\x1b[0m`, `Corriendo en: ${config.siteUrl}`);
+    console.log(`[YotsuDactyl] SISTEMA ONLINE`);
 });
