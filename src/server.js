@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const socketIo = require('socket.io');
 const db = require('./database');
+const daemon = require('./lib/daemon');
 require('dotenv').config();
 
 const app = express();
@@ -11,6 +12,8 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
+
+require('./lib/terminal')(io);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -50,20 +53,15 @@ app.get('/server/:id', async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
         if (result.rows.length === 0) return res.status(404).render('errors/404');
-        
-        const serverData = result.rows[0];
-        res.render('server/index', { server: serverData });
+        res.render('server/index', { server: result.rows[0] });
     } catch (err) {
-        res.status(500).send("Error interno");
+        res.status(500).send("Error en la DB");
     }
 });
 
 app.get('/server/:id/files', async (req, res) => {
     const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
-    const serverData = result.rows[0];
-    
-    const files = []; 
-    res.render('server/files', { server: serverData, files });
+    res.render('server/files', { server: result.rows[0], files: [] });
 });
 
 app.get('/server/:id/startup', async (req, res) => {
@@ -71,19 +69,31 @@ app.get('/server/:id/startup', async (req, res) => {
     res.render('server/startup', { server: result.rows[0] });
 });
 
-io.on('connection', (socket) => {
-    socket.on('server:join', (serverId) => {
-        socket.join(`server_${serverId}`);
-        console.log(`Cliente conectado al servidor: ${serverId}`);
-    });
+app.get('/server/:id/backups', async (req, res) => {
+    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+    res.render('server/backups', { server: result.rows[0] });
+});
 
-    socket.on('server:command', async (data) => {
-        const { serverId, command } = data;
-        io.to(`server_${serverId}`).emit('server:console', `\r\nusuario@yotsudactyl:~$ ${command}`);
-    });
+app.get('/server/:id/settings', async (req, res) => {
+    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+    res.render('server/settings', { server: result.rows[0] });
+});
+
+app.post('/api/server/:id/power', async (req, res) => {
+    const { action } = req.body;
+    const result = await db.query('SELECT identifier FROM servers WHERE id = $1', [req.params.id]);
+    const serverData = result.rows[0];
+
+    try {
+        if (action === 'start') await daemon.startServer(serverData.identifier);
+        if (action === 'stop') await daemon.stopServer(serverData.identifier);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`${config.siteName} OPERATIVO EN PUERTO ${PORT}`);
+    console.log(`\x1b[36m%s\x1b[0m`, `[YotsuDactyl] Operativo en puerto ${PORT}`);
 });
