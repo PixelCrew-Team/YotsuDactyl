@@ -8,7 +8,6 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
 
 app.set('view engine', 'ejs');
@@ -17,64 +16,42 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Generador de ID de 8 caracteres (Letras y Números)
+const generateId = () => Math.random().toString(36).substring(2, 10).toUpperCase();
+
 app.use((req, res, next) => {
     res.locals.siteName = config.siteName;
     res.locals.siteUrl = config.siteUrl;
     res.locals.displayTitle = config.displayTitle;
-    res.locals.user = null; 
+    res.locals.user = { username: 'Admin', role: 'admin' }; // Temporal
     next();
 });
 
 const isAdmin = (req, res, next) => {
-    if (res.locals.user && res.locals.user.role === 'admin') {
-        next();
-    } else {
-        res.status(403).render('403');
-    }
+    if (res.locals.user && res.locals.user.role === 'admin') next();
+    else res.status(403).render('403');
 };
 
-app.get('/', (req, res) => {
-    res.render('login');
+app.get('/', (req, res) => res.render('login'));
+
+app.get('/dash', (req, res) => res.render('dashboard', { servers: [] }));
+
+app.get('/admin', isAdmin, (req, res) => res.render('admin/index'));
+
+app.get('/admin/servers', isAdmin, async (req, res) => {
+    // Aquí luego jalaremos de la DB real
+    res.render('admin/servers', { servers: [] });
 });
 
-app.post('/auth/login', async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-        if (result.rows.length > 0) {
-            const user = result.rows[0];
-            const match = await bcrypt.compare(password, user.password);
-            if (match) {
-                res.redirect('/dash');
-            } else {
-                res.redirect('/?error=1');
-            }
-        } else {
-            res.redirect('/?error=1');
-        }
-    } catch (err) {
-        res.status(500).send('Error en el servidor');
-    }
+app.post('/admin/servers/create', isAdmin, async (req, res) => {
+    const { name, owner, node, ram, disk, cpu, egg } = req.body;
+    const serverId = generateId();
+    // Lógica para guardar en DB y crear carpetas vendrá después
+    console.log(`Creando servidor ${serverId} para ${owner}`);
+    res.redirect('/admin/servers');
 });
 
-app.get('/dash', async (req, res) => {
-    try {
-        const servers = []; 
-        res.render('dashboard', { servers });
-    } catch (err) {
-        res.status(500).send('Error al cargar el dashboard');
-    }
-});
-
-app.get('/admin', isAdmin, (req, res) => {
-    res.render('admin/index');
-});
-
-app.use((req, res) => {
-    res.status(404).render('404');
-});
+app.use((req, res) => res.status(404).render('404'));
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`${config.siteName} operando en puerto ${PORT}`);
-});
+server.listen(PORT, () => console.log(`${config.siteName} en puerto ${PORT}`));
