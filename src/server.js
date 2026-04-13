@@ -5,6 +5,8 @@ const fs = require('fs');
 const socketIo = require('socket.io');
 const db = require('./database');
 const daemon = require('./lib/daemon');
+const fm = require('./lib/fm');
+const backups = require('./lib/backups');
 require('dotenv').config();
 
 const app = express();
@@ -60,8 +62,15 @@ app.get('/server/:id', async (req, res) => {
 });
 
 app.get('/server/:id/files', async (req, res) => {
-    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
-    res.render('server/files', { server: result.rows[0], files: [] });
+    try {
+        const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+        const serverData = result.rows[0];
+        const files = await fm.getFiles(serverData.identifier);
+        res.render('server/files', { server: serverData, files });
+    } catch (err) {
+        const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+        res.render('server/files', { server: result.rows[0], files: [] });
+    }
 });
 
 app.get('/server/:id/startup', async (req, res) => {
@@ -79,14 +88,27 @@ app.get('/server/:id/settings', async (req, res) => {
     res.render('server/settings', { server: result.rows[0] });
 });
 
+app.get('/profile', (req, res) => res.render('profile'));
+app.get('/notifications', (req, res) => res.render('notifications'));
+app.get('/logout', (req, res) => res.render('logout'));
+
 app.post('/api/server/:id/power', async (req, res) => {
     const { action } = req.body;
     const result = await db.query('SELECT identifier FROM servers WHERE id = $1', [req.params.id]);
     const serverData = result.rows[0];
-
     try {
         if (action === 'start') await daemon.startServer(serverData.identifier);
         if (action === 'stop') await daemon.stopServer(serverData.identifier);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/server/:id/backup', async (req, res) => {
+    const result = await db.query('SELECT identifier FROM servers WHERE id = $1', [req.params.id]);
+    try {
+        await backups.createBackup(result.rows[0].identifier);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
