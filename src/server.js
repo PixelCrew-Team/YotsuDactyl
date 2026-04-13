@@ -6,8 +6,6 @@ const socketIo = require('socket.io');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const db = require('./database');
-const daemon = require('./lib/daemon');
-const fm = require('./lib/fm');
 const auth = require('./lib/auth');
 require('dotenv').config();
 
@@ -15,18 +13,12 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const configPath = path.join(__dirname, 'config.json');
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-
-require('./lib/terminal')(io);
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(session({
     secret: 'yotsudactyl_secret_key',
     resave: false,
@@ -35,17 +27,20 @@ app.use(session({
 }));
 
 app.use(async (req, res, next) => {
-    res.locals.siteName = config.siteName;
-    res.locals.siteUrl = config.siteUrl;
-    res.locals.displayTitle = config.displayTitle;
+    if (req.session.userId) {
+        try {
+            const result = await db.query('SELECT * FROM users WHERE id = $1', [req.session.userId]);
+            res.locals.user = result.rows[0];
+        } catch (err) {
+            console.error("Error cargando usuario:", err);
+        }
+    }
     next();
 });
 
 app.get('/', (req, res) => {
     if (req.session.userId) return res.redirect('/dash');
-    const error = req.session.errorMessage;
-    delete req.session.errorMessage;
-    res.render('login', { error });
+    res.render('login', { error: null });
 });
 
 app.post('/auth/login', async (req, res) => {
@@ -60,11 +55,9 @@ app.post('/auth/login', async (req, res) => {
                 return res.redirect('/dash');
             }
         }
-        req.session.errorMessage = "Credenciales incorrectas";
-        res.redirect('/');
+        res.render('login', { error: "Credenciales incorrectas" });
     } catch (err) {
-        req.session.errorMessage = "Error de conexión";
-        res.redirect('/');
+        res.render('login', { error: "Error de conexión" });
     }
 });
 
@@ -73,10 +66,33 @@ app.get('/dash', auth, async (req, res) => {
     res.render('dashboard', { servers: result.rows });
 });
 
+app.get('/perfil', auth, (req, res) => {
+    res.render('perfil');
+});
+
+app.get('/ajustes', auth, (req, res) => {
+    res.render('ajustes');
+});
+
 app.get('/server/:id', auth, async (req, res) => {
     const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
     if (result.rows.length === 0) return res.redirect('/dash');
     res.render('server/index', { server: result.rows[0] });
+});
+
+app.get('/server/:id/files', auth, async (req, res) => {
+    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+    res.render('server/files', { server: result.rows[0] });
+});
+
+app.get('/server/:id/console', auth, async (req, res) => {
+    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+    res.render('server/console', { server: result.rows[0] });
+});
+
+app.get('/server/:id/settings', auth, async (req, res) => {
+    const result = await db.query('SELECT * FROM servers WHERE id = $1', [req.params.id]);
+    res.render('server/settings', { server: result.rows[0] });
 });
 
 app.get('/logout', (req, res) => {
@@ -86,5 +102,5 @@ app.get('/logout', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`[YotsuDactyl] SISTEMA ONLINE`);
+    console.log(`[YotsuDactyl] SISTEMA ONLINE EN PUERTO ${PORT}`);
 });
