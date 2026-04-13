@@ -43,6 +43,14 @@ sudo -u postgres psql -c "CREATE DATABASE yotsudactyl;"
 sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'yotsu_pass';"
 sudo -u postgres psql -d yotsudactyl -f database.sql
 
+# GENERACIÓN AUTOMÁTICA DEL .ENV PARA EVITAR ERRORES DE SASL
+echo "DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=yotsudactyl
+DB_PASSWORD=yotsu_pass
+DB_PORT=5432" > .env
+
+echo -e "${AZUL_B}┃${RESET} Instalando Dependencias..."
 npm install
 
 echo -e "\n${CYAN_B}╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮${RESET}"
