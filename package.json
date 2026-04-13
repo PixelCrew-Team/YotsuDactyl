@@ -1,7 +1,7 @@
 {
   "name": "yotsudactyl",
-  "version": "1.1.0",
-  "description": "Panel de gestión de servidores con soporte SSL y Bcrypt",
+  "version": "1.1.1",
+  "description": "Panel de gestión de servidores con soporte SSL, Bcrypt y EJS",
   "main": "src/server.js",
   "scripts": {
     "start": "pm2 start src/server.js --name yotsudactyl",
@@ -14,6 +14,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "ejs": "^3.1.9",
     "pg": "^8.11.3",
     "socket.io": "^4.7.2",
     "dotenv": "^16.3.1",
