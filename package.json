@@ -1,14 +1,15 @@
 {
   "name": "yotsudactyl",
-  "version": "1.0.0",
-  "description": "Panel de gestión de servidores",
+  "version": "1.1.0",
+  "description": "Panel de gestión de servidores con soporte SSL y Bcrypt",
   "main": "src/server.js",
   "scripts": {
     "start": "pm2 start src/server.js --name yotsudactyl",
     "stop": "pm2 stop yotsudactyl",
     "restart": "pm2 restart yotsudactyl",
     "logs": "pm2 logs yotsudactyl",
-    "delete": "pm2 delete yotsudactyl"
+    "delete": "pm2 delete yotsudactyl",
+    "setup": "node src/createAdmin.js"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -20,6 +21,7 @@
     "path": "^0.12.7",
     "pm2": "^5.3.0",
     "bcrypt": "^5.1.1",
+    "dockerode": "^4.0.2",
     "require-in-the-middle": "^7.1.1"
   }
 }
