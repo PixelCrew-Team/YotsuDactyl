@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Servidores | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; }
+        .sidebar { width: 260px; background: var(--card); border-right: 1px solid rgba(255,255,255,0.05); position: fixed; height: 100vh; }
+        .nav-item { padding: 12px 25px; display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; }
+        .main { margin-left: 260px; padding: 40px; width: 100%; position: relative; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .server-list { margin-top: 20px; }
+        .empty-text { text-align: center; color: rgba(255,255,255,0.4); margin-top: 100px; }
+        
+        .btn-create { 
+            position: absolute; bottom: 80px; left: 40px;
+            background: var(--blue); color: white; padding: 12px 25px; 
+            border-radius: 5px; text-decoration: none; font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+        }
+
+        footer { margin-top: auto; padding-top: 40px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.3); }
+        footer a { color: var(--blue); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="padding: 25px; text-align: center;"><h3><%= displayTitle %></h3></div>
+        <a href="/admin" class="nav-item"><i class="fas fa-home"></i> Inicio</a>
+        <a href="/admin/servers" class="nav-item" style="color: var(--blue);"><i class="fas fa-server"></i> Servidores</a>
+        <a href="/admin/users" class="nav-item"><i class="fas fa-users"></i> Usuarios</a>
+    </div>
+
+    <div class="main">
+        <h1>Gestión de Servidores</h1>
+
+        <div class="server-list">
+            <% if (servers.length === 0) { %>
+                <div class="empty-text">
+                    <p>No hay servidores todavía en el host.</p>
+                </div>
+            <% } else { %>
+                <% } %>
+        </div>
+
+        <a href="#" class="btn-create" onclick="alert('Abriendo formulario de creación...')">CREAR SERVIDOR</a>
+
+        <footer>
+            Copyright &copy; 2026 <a href="<%= siteUrl %>" target="_blank"><%= siteName %></a>. All rights reserved.
+        </footer>
+    </div>
+</body>
+</html>
