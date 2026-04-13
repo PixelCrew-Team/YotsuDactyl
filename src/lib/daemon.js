@@ -1,9 +1,9 @@
 const Docker = require('dockerode');
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
-const createServerContainer = async (server) => {
+const createServerContainer = async (server, egg) => {
     const container = await docker.createContainer({
-        Image: 'node:20-slim',
+        Image: egg.docker_image,
         name: `yotsu-${server.identifier}`,
         WorkingDir: '/home/container',
         Cmd: server.startup_command.split(' '),
