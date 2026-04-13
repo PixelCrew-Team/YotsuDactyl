@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Backups | <%= displayTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --bg: #050505; --card: #0f0f0f; --blue: #007bff; --green: #28a745; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; }
+        .header-server { padding: 20px 40px; background: var(--card); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .container { padding: 40px; }
+        .backup-card { background: var(--card); padding: 30px; border-radius: 8px; border: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--blue); }
+        input:checked + .slider:before { transform: translateX(26px); }
+    </style>
+</head>
+<body>
+    <div class="header-server">
+        <h1><%= server.name %></h1>
+        <div style="display:flex; gap:10px;">
+            <a href="/server/<%= server.id %>" style="color:gray; text-decoration:none;">Console</a>
+            <a href="/server/<%= server.id %>/backups" style="color:white; text-decoration:none; border-bottom: 2px solid var(--blue);">Backups</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="backup-card">
+            <div>
+                <h3 style="margin:0;">Respaldos Automáticos</h3>
+                <p style="color:gray; font-size:14px; margin:5px 0 0 0;">Activa esta opción para crear copias de seguridad diarias de tus archivos.</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" <%= server.backups_enabled ? 'checked' : '' %>>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+</body>
+</html>
