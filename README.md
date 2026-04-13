@@ -20,3 +20,34 @@ Para desplegar Yotsudactyl en un nuevo VPS, solo necesitas ejecutar el siguiente
 
 ```bash
 chmod +x install.sh && ./install.sh
+```
+
+🔑 Configuración Inicial
+1. Crear cuenta de Administrador:
+```bash
+node src/createAdmin.js
+```
+
+2. Iniciar el panel (modo producción)
+```bash
+npm start
+```
+
+Para ver los logs en tiempo real o detener el proceso:
+npm run logs
+npm run stop
+🛠 Requisitos del Sistema
+SO: Ubuntu 22.04 LTS o superior (Recomendado).
+Entorno: Node.js 20.x.
+Base de Datos: PostgreSQL 15+.
+Virtualización: Docker Engine.
+🇩🇴 Créditos y Origen
+Este proyecto no es solo código, es resistencia.
+Creador: Félix (FélixGamer)
+Ubicación de Desarrollo: República Dominicana 🇩🇴
+Fecha de Fundación: 12 de Abril de 2026
+Estado: En constante evolución.
+"No importa las limitaciones del hardware, lo que importa es la lógica del desarrollador."
+🛡️ Próximos Pasos: Ecosistema Yotsuba
+Mientras Yotsudactyl se prepara para su nuevo hogar en un VPS de alto rendimiento, la infraestructura actual evoluciona hacia Yotsuba Upload: la solución definitiva para la conversión de archivos en enlaces rápidos y gestión de almacenamiento.
+¡Aquí no se rinde nadie! 🚀🔋
