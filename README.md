@@ -33,16 +33,15 @@ node src/createAdmin.js
 npm start
 ```
 
-3. Para ver los logs en tiempo real o detener el proceso:
+3. Ver qué está pasando en el servido:
 ```bash
 npm run logs
 ```  
 
-4. Ver qué está pasando en el servido:
+4. detener el panel de forma segura:
 ```bash
 npm run stop
-```  
-(esto detiene el panel de forma segura)
+```
 
 ---
 
