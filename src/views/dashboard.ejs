@@ -1,36 +1,126 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YotsuDactyl - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-galaxy: #020617;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --neon-blue: #38bdf8;
+            --text-main: #f8fafc;
+        }
+        body {
+            background: radial-gradient(circle at top, #0f172a, var(--bg-galaxy));
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--neon-blue);
+            transition: 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .sidebar.active {
+            left: 0;
+            box-shadow: 5px 0 15px rgba(56, 189, 248, 0.3);
+        }
+        .nav-link {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .nav-link:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--neon-blue);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            transition: 0.3s;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .btn-neon {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-neon:hover {
+            background: var(--neon-blue);
+            color: var(--bg-galaxy);
+        }
+    </style>
+</head>
+<body>
+    <button onclick="toggleSidebar()" style="position: fixed; top: 20px; left: 20px; z-index: 1001; background: none; border: none; color: #38bdf8; font-size: 24px; cursor: pointer;">
+        <i class="fas fa-bars"></i>
+    </button>
 
-<div class="container" style="max-width: 1200px; margin: 0 auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-        <h1 style="font-size: 28px; font-weight: 600;">Tus Servidores</h1>
-        <button class="btn-neon" style="font-size: 14px;">+ NUEVO SERVIDOR</button>
+    <div class="sidebar" id="sidebar">
+        <div style="padding: 30px 20px;">
+            <h2 style="color: #38bdf8; font-size: 20px;">YOTSUDACTYL</h2>
+        </div>
+        <nav>
+            <a href="/dash" class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/perfil" class="nav-link"><i class="fas fa-user"></i> Perfil</a>
+            <a href="/ajustes" class="nav-link"><i class="fas fa-cog"></i> Ajustes</a>
+            <hr style="border-color: rgba(56, 189, 248, 0.1);">
+            <a href="/logout" class="nav-link" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Salir</a>
+        </nav>
     </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
-        <% if (typeof servers !== 'undefined' && servers.length > 0) { %>
-            <% servers.forEach(server => { %>
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                        <h3 style="color: #38bdf8; margin: 0; font-size: 18px;"><%= server.name %></h3>
-                        <span style="background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold;">ONLINE</span>
+
+    <div class="container" id="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+            <h1>Tus Servidores</h1>
+            <button class="btn-neon">+ NUEVO</button>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            <% if (typeof servers !== 'undefined' && servers.length > 0) { %>
+                <% servers.forEach(server => { %>
+                    <div class="card">
+                        <h3 style="color: #38bdf8;"><%= server.name %></h3>
+                        <p style="opacity: 0.7;">ID: <%= server.identifier %></p>
+                        <a href="/server/<%= server.id %>" class="btn-neon">Gestionar</a>
                     </div>
-                    <p style="opacity: 0.6; font-size: 13px; margin-bottom: 20px;">ID: <%= server.identifier %></p>
-                    <div style="display: flex; gap: 10px;">
-                        <a href="/server/<%= server.id %>" class="btn-neon" style="text-decoration: none; flex: 1; text-align: center; font-size: 13px;">CONSOLA</a>
-                        <a href="/server/<%= server.id %>/settings" class="btn-neon" style="text-decoration: none; padding: 10px; width: 40px; text-align: center;"><i class="fas fa-cog"></i></a>
-                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="card" style="grid-column: 1 / -1; text-align: center;">
+                    <p>No tienes servidores activos.</p>
                 </div>
-            <% }); %>
-        <% } else { %>
-            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
-                <i class="fas fa-server" style="font-size: 40px; color: rgba(56, 189, 248, 0.2); margin-bottom: 20px;"></i>
-                <p style="opacity: 0.7;">No se encontraron servidores en tu cuenta.</p>
-                <button class="btn-neon" style="margin-top: 15px;">DESPLEGAR PRIMER SERVIDOR</button>
-            </div>
-        <% } %>
+            <% } %>
+        </div>
     </div>
-</div>
 
-</div>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
